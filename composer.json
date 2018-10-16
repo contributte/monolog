@@ -1,0 +1,64 @@
+{
+  "name": "contributte/monolog",
+  "description": "Monolog integration into Nette Framework",
+  "keywords": [
+    "nette",
+    "monolog",
+    "logging"
+  ],
+  "type": "library",
+  "license": "MPL-2.0",
+  "homepage": "https://github.com/contributte/monolog",
+  "authors": [
+    {
+      "name": "Marek Bartoš",
+      "homepage": "https://marek-bartos.cz"
+    }
+  ],
+  "require": {
+    "php": ">=7.1.0",
+    "monolog/monolog": "^1.23.0",
+    "nette/di": "~2.4.12",
+    "nette/utils": "~2.5.2"
+  },
+  "require-dev": {
+    "ninjify/qa": "^0.8.0",
+    "phpunit/phpunit": "^7.2.6",
+    "tracy/tracy": "~2.5.0",
+    "doctrine/dbal": "^2.8"
+  },
+  "autoload": {
+    "psr-4": {
+      "Contributte\\Monolog\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\Contributte\\Monolog\\": "tests"
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "scripts": {
+    "qa": [
+      "linter src tests",
+      "codesniffer src tests"
+    ],
+    "tests": [
+      "phpunit tests --colors=always"
+    ],
+    "coverage": [
+      "phpunit tests --colors=always -c tests/coverage.xml"
+    ],
+    "phpstan-install": [
+      "mkdir -p temp/phpstan",
+      "composer require -d temp/phpstan phpstan/phpstan:0.10",
+      "composer require -d temp/phpstan phpstan/phpstan-deprecation-rules:0.10",
+      "composer require -d temp/phpstan phpstan/phpstan-nette:0.10",
+      "composer require -d temp/phpstan phpstan/phpstan-strict-rules:0.10"
+    ],
+    "phpstan": [
+      "temp/phpstan/vendor/bin/phpstan analyse -l max -c phpstan.neon src"
+    ]
+  }
+}
