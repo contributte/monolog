@@ -7,10 +7,10 @@
 [![Build Status](https://img.shields.io/travis/contributte/monolog.svg?style=flat-square)](https://travis-ci.org/contributte/monolog)
 [![Code coverage](https://img.shields.io/coveralls/contributte/monolog.svg?style=flat-square)](https://coveralls.io/r/contributte/monolog)
 [![Licence](https://img.shields.io/packagist/l/contributte/monolog.svg?style=flat-square)](https://packagist.org/packages/contributte/monolog)
-
 [![Downloads this Month](https://img.shields.io/packagist/dm/contributte/monolog.svg?style=flat-square)](https://packagist.org/packages/contributte/monolog)
 [![Downloads total](https://img.shields.io/packagist/dt/contributte/monolog.svg?style=flat-square)](https://packagist.org/packages/contributte/monolog)
 [![Latest stable](https://img.shields.io/packagist/v/contributte/monolog.svg?style=flat-square)](https://packagist.org/packages/contributte/monolog)
+[![PHPStan](https://img.shields.io/badge/PHPStan-enabled-brightgreen.svg?style=flat)](https://github.com/phpstan/phpstan)
 
 ## Discussion / Help
 
@@ -45,7 +45,7 @@ composer require contributte/monolog
     <tr>
       <td align="center">
         <a href="https://github.com/mabar">
-            <img width="150" height="150" src="https://avatars0.githubusercontent.com/u/20974277?s=400&v=4">
+            <img width="150" height="150" src="https://avatars0.githubusercontent.com/u/20974277?s=150&v=4">
         </a>
         </br>
         <a href="https://github.com/mabar">Marek Bartoš</a>
