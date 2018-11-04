@@ -48,7 +48,7 @@
       "phpunit tests --colors=always"
     ],
     "coverage": [
-      "phpunit tests --colors=always -c tests/coverage.xml"
+      "phpdbg -qrr vendor/bin/phpunit tests --colors=always -c tests/coverage.xml"
     ],
     "phpstan-install": [
       "mkdir -p temp/phpstan",
