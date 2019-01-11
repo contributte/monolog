@@ -30,7 +30,7 @@ monolog:
     channel:
         default: # default channel is required
             handlers:
-                - Monolog\Handlers\RotatingFileHandler(%appDir%/../log/syslog.log, 30, Monolog\Logger::WARNING)
+                - Monolog\Handler\RotatingFileHandler(%appDir%/../log/syslog.log, 30, Monolog\Logger::WARNING)
                 # you can use same configuration as in services section (with setup, type, arguments, etc.)
                 -
                     type: Monolog\Handler\RotatingFileHandler
