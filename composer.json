@@ -18,8 +18,8 @@
   "require": {
     "php": ">=7.1.0",
     "monolog/monolog": "^1.23.0",
-    "nette/di": "~2.4.12",
-    "nette/utils": "~2.5.2"
+    "nette/di": "~2.4.12 || ~3.0.0",
+    "nette/utils": "~2.5.2 || ~3.0.0"
   },
   "require-dev": {
     "ninjify/qa": "^0.8.0",
