@@ -4,17 +4,15 @@
 
 See also [Monolog documentation](https://github.com/Seldaek/monolog#documentation), this is only an integration.
 
-## Content
+## Setup
 
-- [Installation - how to register](#installation)
-- [Configuration - how to configure](#configuration)
-- [Logging](#logging)
-- [Logger manager](#loggermanager)
-- [Logger holder](#loggerholder)
-- [Bridges](#bridges)
-    - [Doctrine](#doctrine)
+Install package
 
-## Installation
+```bash
+composer require contributte/monolog
+```
+
+Register extension
 
 ```yaml
 extensions:
