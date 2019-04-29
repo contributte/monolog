@@ -4,6 +4,7 @@ namespace Contributte\Monolog;
 
 use Contributte\Monolog\Exception\Logic\InvalidStateException;
 use Monolog\Logger;
+use Psr\Log\LoggerInterface;
 
 class LoggerManager implements ILoggerManager
 {
@@ -27,7 +28,7 @@ class LoggerManager implements ILoggerManager
 		$this->loggers[$name] = $logger;
 	}
 
-	public function get(string $name): Logger
+	public function get(string $name): LoggerInterface
 	{
 		if (!$this->has($name)) {
 			throw new InvalidStateException(sprintf('Cannot get undefined logger "%s".', $name));

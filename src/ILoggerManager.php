@@ -2,13 +2,13 @@
 
 namespace Contributte\Monolog;
 
-use Monolog\Logger;
+use Psr\Log\LoggerInterface;
 
 interface ILoggerManager
 {
 
 	public function has(string $name): bool;
 
-	public function get(string $name): Logger;
+	public function get(string $name): LoggerInterface;
 
 }
