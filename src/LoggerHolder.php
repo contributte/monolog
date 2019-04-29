@@ -51,6 +51,7 @@ class LoggerHolder
 		// Write in log which class used LoggerHolder
 		$logger->pushProcessor(function (array $record) use ($calledBy): array {
 			$record['extra']['calledBy'] = $calledBy;
+
 			return $record;
 		});
 

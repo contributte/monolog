@@ -53,7 +53,7 @@ class MonologExtensionTest extends TestCase
 	 */
 	private function createContainer(array $config): Container
 	{
-		$loader = new ContainerLoader(__DIR__ . '/../tmp/' . getmypid(), true);
+		$loader = new ContainerLoader(__DIR__ . '/../../temp/tests/' . getmypid(), true);
 		$class = $loader->load(function (Compiler $compiler) use ($config): void {
 			$compiler->addConfig($config);
 			$compiler->addExtension('monolog', new MonologExtension());
