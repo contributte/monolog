@@ -35,8 +35,6 @@ composer require contributte/monolog
 - [Logging](/.docs/README.md#logging)
 - [Logger manager](/.docs/README.md#loggermanager)
 - [Logger holder](/.docs/README.md#loggerholder)
-- [Bridges](/.docs/README.md#bridges)
-    - [Doctrine](/.docs/README.md#doctrine)
 
 ## Maintainers
 
