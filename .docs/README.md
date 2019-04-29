@@ -129,18 +129,3 @@ class VerySpecialClassWithoutDependencyInjectionContainerAvailable
 
 }
 ```
-
-## Bridges
-
-Bridges to other packages.
-
-### Doctrine
-
-Log all queries from doctrine/dbal
-
-```yaml
-# example for nettrine/dbal integration
-dbal:
-    configuration:
-        sqlLogger: Contributte\Monolog\Bridges\DoctrineDbal\SqlLogger(@Monolog\Logger)
-```
