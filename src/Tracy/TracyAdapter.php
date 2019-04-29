@@ -42,6 +42,7 @@ class TracyAdapter extends Logger
 	public function log($message, $priority = ILogger::INFO): ?string
 	{
 		$this->psrLog($message, $priority);
+
 		return parent::log($message, $priority);
 	}
 
@@ -60,6 +61,7 @@ class TracyAdapter extends Logger
 			$message = $value;
 			$context = [];
 		}
+
 		$this->psrLogger->log(
 			self::PRIORITY_MAP[$priority] ?? LogLevel::ERROR,
 			$message,

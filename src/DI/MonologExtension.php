@@ -49,6 +49,7 @@ class MonologExtension extends CompilerExtension
 
 		if ($config['manager']['enabled']) {
 			$manager = $builder->addDefinition($this->prefix('manager'));
+
 			if ($config['manager']['lazy']) {
 				$manager->setFactory(LazyLoggerManager::class, ['prefix' => $this->prefix('logger')]);
 			} else {
@@ -131,6 +132,7 @@ class MonologExtension extends CompilerExtension
 	public function afterCompile(ClassType $class): void
 	{
 		$config = $this->validateConfig($this->defaults);
+
 		if ($config['holder']['enabled']) {
 			$initialize = $class->getMethod('initialize');
 			$initialize->addBody('Contributte\Monolog\LoggerHolder::setLogger($this->getByType(?));', [Logger::class]);
