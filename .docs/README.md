@@ -45,19 +45,17 @@ monolog:
 Log message with injected logger (only `default` is autowired)
 
 ```php
-use Monolog\Logger;
+use Psr\Log\LoggerInterface;
 
 class ExampleService
 {
 
-    /** @var Logger **/
+    /** @var LoggerInterface **/
     private $logger;
 
-    public function injectLogger(Logger $logger): void
+    public function injectLogger(LoggerInterface $logger): void
     {
         $this->logger = $logger;
-        // or withName if you want change channel name
-        $this->logger = $logger->withName('example');
     }
 
     public function doSomething(): void
@@ -86,7 +84,7 @@ class ExampleService
 {
 
     /** @var ILoggerManager **/
-    private $logger;
+    private $loggerManager;
 
     public function injectLoggerManager(ILoggerManager $loggerManager): void
     {

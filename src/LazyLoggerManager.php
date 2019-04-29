@@ -3,8 +3,8 @@
 namespace Contributte\Monolog;
 
 use Contributte\Monolog\Exception\Logic\InvalidStateException;
-use Monolog\Logger;
 use Nette\DI\Container;
+use Psr\Log\LoggerInterface;
 
 class LazyLoggerManager implements ILoggerManager
 {
@@ -26,7 +26,7 @@ class LazyLoggerManager implements ILoggerManager
 		return $this->container->hasService(sprintf('%s.%s', $this->prefix, $name));
 	}
 
-	public function get(string $name): Logger
+	public function get(string $name): LoggerInterface
 	{
 		if (!$this->has($name)) {
 			throw new InvalidStateException(sprintf('Cannot get undefined logger "%s".', $name));

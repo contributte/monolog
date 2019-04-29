@@ -9,6 +9,7 @@ use Nette\DI\Compiler;
 use Nette\DI\Container;
 use Nette\DI\ContainerLoader;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use Tests\Contributte\Monolog\NeonLoader;
 
 class MonologExtensionTest extends TestCase
@@ -28,14 +29,16 @@ class MonologExtensionTest extends TestCase
 		'));
 
 		/** @var Logger $default */
-		$default = $container->getByType(Logger::class);
+		$default = $container->getByType(LoggerInterface::class);
 		$this->assertInstanceOf(Logger::class, $default);
 		$this->assertEquals('default', $default->getName());
 
 		/** @var Logger $foo */
 		$foo = $container->getService('monolog.logger.foo');
-		$this->assertInstanceOf(Logger::class, $foo);
+		$this->assertInstanceOf(LoggerInterface::class, $foo);
 		$this->assertEquals('foo', $foo->getName());
+
+		$this->assertInstanceOf(Logger::class, $container->getByType(Logger::class));
 	}
 
 	public function testRegistrationNoDefault(): void
@@ -44,8 +47,6 @@ class MonologExtensionTest extends TestCase
 		$this->expectExceptionMessage('monolog.channel.default is required.');
 
 		$container = $this->createContainer([]);
-
-		$container->getByType(Logger::class);
 	}
 
 	/**

@@ -101,8 +101,7 @@ class MonologExtension extends CompilerExtension
 			}
 
 			$logger = $builder->addDefinition($this->prefix('logger.' . $name))
-				->setType(Logger::class)
-				->setArguments([
+				->setFactory(Logger::class, [
 					$name,
 					$channel['handlers'],
 					$channel['processors'] ?? [],

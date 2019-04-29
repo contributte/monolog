@@ -4,6 +4,7 @@ namespace Contributte\Monolog;
 
 use Contributte\Monolog\Exception\Logic\InvalidStateException;
 use Monolog\Logger;
+use Psr\Log\LoggerInterface;
 
 class LoggerHolder
 {
@@ -22,6 +23,9 @@ class LoggerHolder
 		$this->instLogger = $logger;
 	}
 
+	/**
+	 * @return static
+	 */
 	public static function getInstance(): self
 	{
 		if (static::$logger === null) {
@@ -40,7 +44,7 @@ class LoggerHolder
 		static::$logger = $logger;
 	}
 
-	public function getLogger(): Logger
+	public function getLogger(): LoggerInterface
 	{
 		$backtrace = debug_backtrace();
 		// Get class which called this or file if class does not exist
