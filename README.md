@@ -2,8 +2,6 @@
 
 [Monolog](https://github.com/Seldaek/monolog/) integration into [Nette/DI](https://github.com/nette/di)
 
------
-
 [![Build Status](https://img.shields.io/travis/contributte/monolog.svg?style=flat-square)](https://travis-ci.org/contributte/monolog)
 [![Code coverage](https://img.shields.io/coveralls/contributte/monolog.svg?style=flat-square)](https://coveralls.io/r/contributte/monolog)
 [![Licence](https://img.shields.io/packagist/l/contributte/monolog.svg?style=flat-square)](https://packagist.org/packages/contributte/monolog)
@@ -12,29 +10,21 @@
 [![Latest stable](https://img.shields.io/packagist/v/contributte/monolog.svg?style=flat-square)](https://packagist.org/packages/contributte/monolog)
 [![PHPStan](https://img.shields.io/badge/PHPStan-enabled-brightgreen.svg?style=flat)](https://github.com/phpstan/phpstan)
 
-## Discussion / Help
+## Documentation
 
-[![Join the chat](https://img.shields.io/gitter/room/contributte/contributte.svg?style=flat-square)](http://bit.ly/ctteg)
-
-## Install
-
-```
-composer require contributte/monolog
-```
+- [Setup](.docs/README.md#setup)
+- [Configuration](.docs/README.md#configuration)
+- [Logging](.docs/README.md#logging)
+- [Logger manager](.docs/README.md#loggermanager)
+- [Logger holder](.docs/README.md#loggerholder)
 
 ## Versions
 
 | State       | Version | Branch   | PHP      |
 |-------------|---------|----------|----------|
+| stable      | `^0.2`  | `master` | `>= 7.2` |
 | stable      | `^0.1`  | `master` | `>= 7.1` |
 
-## Overview
-
-- [Installation - how to register](/.docs/README.md#installation)
-- [Configuration - how to configure](/.docs/README.md#configuration)
-- [Logging](/.docs/README.md#logging)
-- [Logger manager](/.docs/README.md#loggermanager)
-- [Logger holder](/.docs/README.md#loggerholder)
 
 ## Maintainers
 
@@ -51,7 +41,3 @@ composer require contributte/monolog
     </tr>
   </tbody>
 </table>
-
------
-
-Thank you for testing, reporting and contributing.

@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace Tests\Contributte\Monolog\DI;
+namespace Tests\Contributte\Monolog\Unit\DI;
 
 use Contributte\Monolog\DI\MonologExtension;
 use Contributte\Monolog\Exception\Logic\InvalidStateException;
@@ -53,7 +53,7 @@ class MonologExtensionTest extends TestCase
 	 */
 	private function createContainer(array $config): Container
 	{
-		$loader = new ContainerLoader(__DIR__ . '/../../temp/tests/' . getmypid(), true);
+		$loader = new ContainerLoader(__DIR__ . '/../../../temp/tests/' . getmypid(), true);
 		$class = $loader->load(function (Compiler $compiler) use ($config): void {
 			$compiler->addConfig($config);
 			$compiler->addExtension('monolog', new MonologExtension());
