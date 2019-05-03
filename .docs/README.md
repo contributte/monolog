@@ -23,8 +23,9 @@ extensions:
 
 ```yaml
 monolog:
-    tracy:
-        hook: true # use monolog inside tracy (required to log exceptions with monolog)
+    hook:
+      fromTracy: true # enabled by default, log through Tracy into Monolog
+      toTracy: true # enabled by default, log through Monolog into Tracy
     channel:
         default: # default channel is required
             handlers:

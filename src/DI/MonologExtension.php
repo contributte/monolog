@@ -6,12 +6,15 @@ use Contributte\Monolog\Exception\Logic\InvalidArgumentException;
 use Contributte\Monolog\Exception\Logic\InvalidStateException;
 use Contributte\Monolog\LazyLoggerManager;
 use Contributte\Monolog\LoggerManager;
-use Contributte\Monolog\Tracy\TracyAdapter;
+use Monolog\Handler\PsrHandler;
 use Monolog\Logger;
 use Nette\DI\Compiler;
 use Nette\DI\CompilerExtension;
+use Nette\DI\Statement;
 use Nette\PhpGenerator\ClassType;
 use Nette\Utils\Strings;
+use Tracy\Bridges\Psr\PsrToTracyLoggerAdapter;
+use Tracy\Bridges\Psr\TracyToPsrLoggerAdapter;
 use Tracy\Debugger;
 
 class MonologExtension extends CompilerExtension
@@ -20,8 +23,9 @@ class MonologExtension extends CompilerExtension
 	/** @var mixed[] */
 	private $defaults = [
 		'channel' => [],
-		'tracy' => [
-			'hook' => true,
+		'hook' => [
+			'fromTracy' => true, // log through Tracy
+			'toTracy' => true, // log through Monolog
 		],
 		'holder' => [
 			'enabled' => false,
@@ -57,11 +61,25 @@ class MonologExtension extends CompilerExtension
 			}
 		}
 
+		$tracyHandler = null;
+
+		if (class_exists(Debugger::class) && $config['hook']['toTracy'] && $builder->hasDefinition('tracy.logger')) {
+			$tracyAdapter = new Statement(TracyToPsrLoggerAdapter::class);
+			$tracyAdapter->arguments = ['@tracy.logger'];
+
+			$tracyHandler = new Statement(PsrHandler::class);
+			$tracyHandler->arguments = [$tracyAdapter];
+		}
+
 		foreach ($config['channel'] as $name => $channel) {
 			$channel = $this->validateConfig($this->channelDefaults, $channel, $this->prefix('channel.' . $name));
 
 			if (!is_string($name)) {
 				throw new InvalidArgumentException(sprintf('%s.channel.%s name must be a string', $this->name, (string) $name));
+			}
+
+			if ($tracyHandler !== null) {
+				$channel['handlers']['tracy'] = $tracyHandler;
 			}
 
 			if (!isset($channel['handlers']) || $channel['handlers'] === []) {
@@ -117,23 +135,27 @@ class MonologExtension extends CompilerExtension
 			}
 		}
 
-		if ($config['tracy']['hook'] === true && class_exists(Debugger::class)) {
-			if ($builder->hasDefinition('tracy.logger')) {
-				$builder->removeDefinition('tracy.logger');
-				$builder->addAlias('tracy.logger', $this->prefix('tracyAdapter'));
-			}
+		if (class_exists(Debugger::class) && $config['hook']['fromTracy'] && $builder->hasDefinition('tracy.logger')) {
+			$builder->getDefinition('tracy.logger')
+				->setAutowired(false);
 
-			$builder->addDefinition($this->prefix('tracyAdapter'))
-				->setFactory(TracyAdapter::class, [$this->prefix('@logger.default'), Debugger::$logDirectory, Debugger::$email]);
+			$builder->addDefinition($this->prefix('psrToTracyAdapter'))
+				->setFactory(PsrToTracyLoggerAdapter::class);
 		}
 	}
 
 	public function afterCompile(ClassType $class): void
 	{
+		$builder = $this->getContainerBuilder();
 		$config = $this->validateConfig($this->defaults);
+		$initialize = $class->getMethod('initialize');
+
+		if (class_exists(Debugger::class) && $config['hook']['fromTracy'] && $builder->hasDefinition('tracy.logger')) {
+			$logger = $builder->getDefinition($this->prefix('psrToTracyAdapter'));
+			$initialize->addBody($builder->formatPhp('Tracy\Debugger::setLogger(?);', [$logger]));
+		}
 
 		if ($config['holder']['enabled']) {
-			$initialize = $class->getMethod('initialize');
 			$initialize->addBody('Contributte\Monolog\LoggerHolder::setLogger($this->getByType(?));', [Logger::class]);
 		}
 	}
