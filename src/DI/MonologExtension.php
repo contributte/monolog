@@ -6,10 +6,12 @@ use Contributte\Monolog\Exception\Logic\InvalidArgumentException;
 use Contributte\Monolog\Exception\Logic\InvalidStateException;
 use Contributte\Monolog\LazyLoggerManager;
 use Contributte\Monolog\LoggerManager;
+use Contributte\Monolog\Tracy\LazyTracyLogger;
 use Monolog\Handler\PsrHandler;
 use Monolog\Logger;
 use Nette\DI\Compiler;
 use Nette\DI\CompilerExtension;
+use Nette\DI\Container;
 use Nette\DI\Statement;
 use Nette\PhpGenerator\ClassType;
 use Nette\Utils\Strings;
@@ -140,7 +142,12 @@ class MonologExtension extends CompilerExtension
 				->setAutowired(false);
 
 			$builder->addDefinition($this->prefix('psrToTracyAdapter'))
-				->setFactory(PsrToTracyLoggerAdapter::class);
+				->setFactory(PsrToTracyLoggerAdapter::class)
+				->setAutowired(false);
+
+			$builder->addDefinition($this->prefix('psrToTracyLazyAdapter'))
+				->setFactory(LazyTracyLogger::class, [$this->prefix('psrToTracyAdapter')])
+				->setAutowired(false);
 		}
 	}
 
@@ -151,8 +158,7 @@ class MonologExtension extends CompilerExtension
 		$initialize = $class->getMethod('initialize');
 
 		if (class_exists(Debugger::class) && $config['hook']['fromTracy'] && $builder->hasDefinition('tracy.logger')) {
-			$logger = $builder->getDefinition($this->prefix('psrToTracyAdapter'));
-			$initialize->addBody($builder->formatPhp('Tracy\Debugger::setLogger(?);', [$logger]));
+			$initialize->addBody($builder->formatPhp('Tracy\Debugger::setLogger(?);', [$this->prefix('@psrToTracyLazyAdapter')]));
 		}
 
 		if ($config['holder']['enabled']) {
