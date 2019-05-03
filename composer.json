@@ -28,7 +28,10 @@
     "phpstan/phpstan-shim": "^0.11",
     "phpstan/phpstan-strict-rules": "^0.11",
     "phpunit/phpunit": "^8.1.3",
-    "tracy/tracy": "~2.5.0"
+    "tracy/tracy": "~2.6.2"
+  },
+  "conflict": {
+    "tracy/tracy": "<2.6.2"
   },
   "autoload": {
     "psr-4": {
