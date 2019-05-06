@@ -153,7 +153,7 @@ class MonologExtension extends CompilerExtension
 		}
 
 		if ($config['holder']['enabled']) {
-			$initialize->addBody('Contributte\Monolog\LoggerHolder::setLogger($this->getByType(?));', [Logger::class]);
+			$initialize->addBody('Contributte\Monolog\LoggerHolder::setLogger($this->getByType(?));', [$this->prefix('logger.default'), Container::class]);
 		}
 	}
 
