@@ -4,23 +4,28 @@ namespace Contributte\Monolog;
 
 use Contributte\Monolog\Exception\Logic\InvalidStateException;
 use Monolog\Logger;
+use Nette\DI\Container;
 use Psr\Log\LoggerInterface;
 
 class LoggerHolder
 {
 
-	/** @var Logger|null */
-	private static $logger;
+	/** @var string|null */
+	private static $loggerServiceName;
 
-	/** @var LoggerHolder|null */
+	/** @var Container|null */
+	private static $container;
+
+	/** @var static|null */
 	private static $instSelf;
 
 	/** @var Logger */
 	private $instLogger;
 
-	public function __construct(Logger $logger)
+	public static function setLogger(string $loggerServiceName, Container $container): void
 	{
-		$this->instLogger = $logger;
+		static::$loggerServiceName = $loggerServiceName;
+		static::$container = $container;
 	}
 
 	/**
@@ -28,20 +33,22 @@ class LoggerHolder
 	 */
 	public static function getInstance(): self
 	{
-		if (static::$logger === null) {
-			throw new InvalidStateException(sprintf('Call %s::setLogger to use %s::getInstance', static::class, static::class));
-		}
-
 		if (static::$instSelf === null) {
-			static::$instSelf = new static(static::$logger);
+			if (static::$loggerServiceName === null || static::$container === null) {
+				throw new InvalidStateException(sprintf('Call %s::setLogger to use %s::getInstance', static::class, static::class));
+			}
+
+			/** @var Logger $logger */
+			$logger = static::$container->getService(static::$loggerServiceName);
+			static::$instSelf = new static($logger);
 		}
 
 		return static::$instSelf;
 	}
 
-	public static function setLogger(Logger $logger): void
+	public function __construct(Logger $logger)
 	{
-		static::$logger = $logger;
+		$this->instLogger = $logger;
 	}
 
 	public function getLogger(): LoggerInterface
