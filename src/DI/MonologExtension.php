@@ -4,6 +4,7 @@ namespace Contributte\Monolog\DI;
 
 use Contributte\Monolog\Exception\Logic\InvalidArgumentException;
 use Contributte\Monolog\Exception\Logic\InvalidStateException;
+use Contributte\Monolog\LoggerHolder;
 use Contributte\Monolog\LoggerManager;
 use Contributte\Monolog\Tracy\LazyTracyLogger;
 use Monolog\Handler\PsrHandler;
@@ -149,11 +150,11 @@ class MonologExtension extends CompilerExtension
 		$initialize = $class->getMethod('initialize');
 
 		if (class_exists(Debugger::class) && $config['hook']['fromTracy'] && $builder->hasDefinition('tracy.logger')) {
-			$initialize->addBody($builder->formatPhp('Tracy\Debugger::setLogger(?);', [$this->prefix('@psrToTracyLazyAdapter')]));
+			$initialize->addBody($builder->formatPhp(Debugger::class . '::setLogger(?);', [$this->prefix('@psrToTracyLazyAdapter')]));
 		}
 
 		if ($config['holder']['enabled']) {
-			$initialize->addBody('Contributte\Monolog\LoggerHolder::setLogger($this->getByType(?));', [$this->prefix('logger.default'), Container::class]);
+			$initialize->addBody(LoggerHolder::class . '::setLogger($this->getByType(?));', [$this->prefix('logger.default'), Container::class]);
 		}
 	}
 
