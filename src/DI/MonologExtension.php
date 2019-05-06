@@ -4,7 +4,6 @@ namespace Contributte\Monolog\DI;
 
 use Contributte\Monolog\Exception\Logic\InvalidArgumentException;
 use Contributte\Monolog\Exception\Logic\InvalidStateException;
-use Contributte\Monolog\LazyLoggerManager;
 use Contributte\Monolog\LoggerManager;
 use Contributte\Monolog\Tracy\LazyTracyLogger;
 use Monolog\Handler\PsrHandler;
@@ -34,7 +33,6 @@ class MonologExtension extends CompilerExtension
 		],
 		'manager' => [
 			'enabled' => false,
-			'lazy' => true,
 		],
 	];
 
@@ -54,13 +52,10 @@ class MonologExtension extends CompilerExtension
 		}
 
 		if ($config['manager']['enabled']) {
-			$manager = $builder->addDefinition($this->prefix('manager'));
-
-			if ($config['manager']['lazy']) {
-				$manager->setFactory(LazyLoggerManager::class, ['prefix' => $this->prefix('logger')]);
-			} else {
-				$manager->setFactory(LoggerManager::class);
-			}
+			$builder->addDefinition($this->prefix('manager'))
+				->setFactory(LoggerManager::class, [
+					$this->prefix('logger'),
+				]);
 		}
 
 		$tracyHandler = null;
@@ -126,10 +121,6 @@ class MonologExtension extends CompilerExtension
 					$channel['handlers'],
 					$channel['processors'] ?? [],
 				]);
-
-			if ($config['manager']['enabled'] === true && $config['manager']['lazy'] !== true) {
-				$manager->addSetup('add', [$logger]);
-			}
 
 			// Only default logger is autowired
 			if ($name !== 'default') {
