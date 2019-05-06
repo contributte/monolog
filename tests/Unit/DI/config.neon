@@ -1,0 +1,10 @@
+monolog:
+	channel:
+		default:
+			handlers:
+				- Monolog\Handler\NullHandler
+		foo:
+			handlers:
+				- Monolog\Handler\NullHandler
+	manager:
+		enabled: true

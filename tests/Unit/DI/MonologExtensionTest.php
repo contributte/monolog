@@ -11,25 +11,13 @@ use Nette\DI\Container;
 use Nette\DI\ContainerLoader;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
-use Tests\Contributte\Monolog\NeonLoader;
 
 class MonologExtensionTest extends TestCase
 {
 
 	public function testRegistration(): void
 	{
-		$container = $this->createContainer(NeonLoader::load('
-			monolog:
-				channel:
-					default:
-						handlers:
-							- Monolog\Handler\NullHandler
-					foo:
-						handlers:
-							- Monolog\Handler\NullHandler
-				manager:
-					enabled: true
-		'));
+		$container = $this->createContainer(__DIR__ . '/config.neon');
 
 		/** @var Logger $default */
 		$default = $container->getByType(LoggerInterface::class);
@@ -58,19 +46,16 @@ class MonologExtensionTest extends TestCase
 		$this->expectException(InvalidStateException::class);
 		$this->expectExceptionMessage('monolog.channel.default is required.');
 
-		$container = $this->createContainer([]);
+		$container = $this->createContainer(__DIR__ . '/empty.neon');
 	}
 
-	/**
-	 * @param mixed[] $config
-	 */
-	private function createContainer(array $config): Container
+	private function createContainer(string $configFile): Container
 	{
 		$loader = new ContainerLoader(__DIR__ . '/../../../temp/tests/' . getmypid(), true);
-		$class = $loader->load(function (Compiler $compiler) use ($config): void {
-			$compiler->addConfig($config);
+		$class = $loader->load(function (Compiler $compiler) use ($configFile): void {
+			$compiler->loadConfig($configFile);
 			$compiler->addExtension('monolog', new MonologExtension());
-		}, serialize($config));
+		}, random_bytes(10));
 
 		/** @var Container $container */
 		return new $class();
