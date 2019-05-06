@@ -6,6 +6,5 @@ includes:
 
 parameters:
 	ignoreErrors:
-		- '#^Variable \$manager might not be defined\.$#'
 		- '#^Call to deprecated method formatPhp\(\) of class Nette\\DI\\ContainerBuilder\.$#'
 		- '#^Method Contributte\\Monolog\\Tracy\\LazyTracyLogger\:\:log\(\) has parameter (\$priority|\$value) with no typehint specified\.$#'

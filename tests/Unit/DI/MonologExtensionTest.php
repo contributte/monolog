@@ -4,6 +4,7 @@ namespace Tests\Contributte\Monolog\Unit\DI;
 
 use Contributte\Monolog\DI\MonologExtension;
 use Contributte\Monolog\Exception\Logic\InvalidStateException;
+use Contributte\Monolog\LoggerManager;
 use Monolog\Logger;
 use Nette\DI\Compiler;
 use Nette\DI\Container;
@@ -26,6 +27,8 @@ class MonologExtensionTest extends TestCase
 					foo:
 						handlers:
 							- Monolog\Handler\NullHandler
+				manager:
+					enabled: true
 		'));
 
 		/** @var Logger $default */
@@ -39,6 +42,15 @@ class MonologExtensionTest extends TestCase
 		$this->assertEquals('foo', $foo->getName());
 
 		$this->assertInstanceOf(Logger::class, $container->getByType(Logger::class));
+
+		/** @var LoggerManager $manager */
+		$manager = $container->getByType(LoggerManager::class);
+
+		$this->assertTrue($manager->has('default'));
+		$this->assertSame($default, $manager->get('default'));
+
+		$this->assertTrue($manager->has('foo'));
+		$this->assertSame($foo, $manager->get('foo'));
 	}
 
 	public function testRegistrationNoDefault(): void

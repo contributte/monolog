@@ -3,29 +3,27 @@
 namespace Contributte\Monolog;
 
 use Contributte\Monolog\Exception\Logic\InvalidStateException;
-use Monolog\Logger;
+use Nette\DI\Container;
 use Psr\Log\LoggerInterface;
 
-class LoggerManager implements ILoggerManager
+class LoggerManager
 {
 
-	/** @var Logger[] */
-	private $loggers;
+	/** @var string */
+	private $prefix;
+
+	/** @var Container */
+	private $container;
+
+	public function __construct(string $prefix, Container $container)
+	{
+		$this->prefix = $prefix;
+		$this->container = $container;
+	}
 
 	public function has(string $name): bool
 	{
-		return isset($this->loggers[$name]);
-	}
-
-	public function add(Logger $logger): void
-	{
-		$name = $logger->getName();
-
-		if ($this->has($name)) {
-			throw new InvalidStateException(sprintf('Cannot add logger with name "%s". Logger with same name is already defined.', $name));
-		}
-
-		$this->loggers[$name] = $logger;
+		return $this->container->hasService(sprintf('%s.%s', $this->prefix, $name));
 	}
 
 	public function get(string $name): LoggerInterface
@@ -34,7 +32,7 @@ class LoggerManager implements ILoggerManager
 			throw new InvalidStateException(sprintf('Cannot get undefined logger "%s".', $name));
 		}
 
-		return $this->loggers[$name];
+		return $this->container->getService(sprintf('%s.%s', $this->prefix, $name));
 	}
 
 }
