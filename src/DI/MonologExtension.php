@@ -11,7 +11,6 @@ use Monolog\Handler\PsrHandler;
 use Monolog\Logger;
 use Nette\DI\Compiler;
 use Nette\DI\CompilerExtension;
-use Nette\DI\Container;
 use Nette\DI\Statement;
 use Nette\PhpGenerator\ClassType;
 use Nette\Utils\Strings;
@@ -154,7 +153,7 @@ class MonologExtension extends CompilerExtension
 		}
 
 		if ($config['holder']['enabled']) {
-			$initialize->addBody(LoggerHolder::class . '::setLogger($this->getByType(?));', [$this->prefix('logger.default'), Container::class]);
+			$initialize->addBody(LoggerHolder::class . '::setLogger(?, $this);', [$this->prefix('logger.default')]);
 		}
 	}
 
