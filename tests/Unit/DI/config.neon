@@ -8,3 +8,5 @@ monolog:
 				- Monolog\Handler\NullHandler
 	manager:
 		enabled: true
+	holder:
+		enabled: true

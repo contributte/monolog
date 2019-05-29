@@ -4,6 +4,7 @@ namespace Tests\Contributte\Monolog\Unit\DI;
 
 use Contributte\Monolog\DI\MonologExtension;
 use Contributte\Monolog\Exception\Logic\InvalidStateException;
+use Contributte\Monolog\LoggerHolder;
 use Contributte\Monolog\LoggerManager;
 use Monolog\Logger;
 use Nette\DI\Compiler;
@@ -18,6 +19,9 @@ class MonologExtensionTest extends TestCase
 	public function testRegistration(): void
 	{
 		$container = $this->createContainer(__DIR__ . '/config.neon');
+
+		// Needed for LoggerHolder
+		$container->initialize();
 
 		/** @var Logger $default */
 		$default = $container->getByType(LoggerInterface::class);
@@ -39,6 +43,8 @@ class MonologExtensionTest extends TestCase
 
 		$this->assertTrue($manager->has('foo'));
 		$this->assertSame($foo, $manager->get('foo'));
+
+		$this->assertInstanceOf(LoggerInterface::class, LoggerHolder::getInstance()->getLogger());
 	}
 
 	public function testRegistrationNoDefault(): void
