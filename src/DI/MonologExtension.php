@@ -137,8 +137,7 @@ class MonologExtension extends CompilerExtension
 				->setAutowired(false);
 
 			$builder->addDefinition($this->prefix('psrToTracyLazyAdapter'))
-				->setFactory(LazyTracyLogger::class, [$this->prefix('psrToTracyAdapter')])
-				->setAutowired(false);
+				->setFactory(LazyTracyLogger::class, [$this->prefix('psrToTracyAdapter')]);
 		}
 	}
 

@@ -6,12 +6,15 @@ use Contributte\Monolog\DI\MonologExtension;
 use Contributte\Monolog\Exception\Logic\InvalidStateException;
 use Contributte\Monolog\LoggerHolder;
 use Contributte\Monolog\LoggerManager;
+use Contributte\Monolog\Tracy\LazyTracyLogger;
 use Monolog\Logger;
 use Nette\DI\Compiler;
 use Nette\DI\Container;
 use Nette\DI\ContainerLoader;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
+use Tracy\Bridges\Nette\TracyExtension;
+use Tracy\ILogger;
 
 class MonologExtensionTest extends TestCase
 {
@@ -45,6 +48,8 @@ class MonologExtensionTest extends TestCase
 		$this->assertSame($foo, $manager->get('foo'));
 
 		$this->assertInstanceOf(LoggerInterface::class, LoggerHolder::getInstance()->getLogger());
+
+		$this->assertInstanceOf(LazyTracyLogger::class, $container->getByType(ILogger::class));
 	}
 
 	public function testRegistrationNoDefault(): void
@@ -60,6 +65,7 @@ class MonologExtensionTest extends TestCase
 		$loader = new ContainerLoader(__DIR__ . '/../../../temp/tests/' . getmypid(), true);
 		$class = $loader->load(function (Compiler $compiler) use ($configFile): void {
 			$compiler->loadConfig($configFile);
+			$compiler->addExtension('tracy', new TracyExtension());
 			$compiler->addExtension('monolog', new MonologExtension());
 		}, random_bytes(10));
 
