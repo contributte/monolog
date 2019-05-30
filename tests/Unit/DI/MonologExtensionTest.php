@@ -23,7 +23,7 @@ class MonologExtensionTest extends TestCase
 	{
 		$container = $this->createContainer(__DIR__ . '/config.neon');
 
-		// Needed for LoggerHolder
+		// Needed for LoggerHolder and creation of original Tracy\Logger
 		$container->initialize();
 
 		/** @var Logger $default */

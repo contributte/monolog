@@ -148,6 +148,7 @@ class MonologExtension extends CompilerExtension
 		$initialize = $class->getMethod('initialize');
 
 		if (class_exists(Debugger::class) && $config['hook']['fromTracy'] && $builder->hasDefinition('tracy.logger')) {
+			$initialize->addBody('$this->getService("tracy.logger");'); // Create original Tracy\Logger service to prevent psrToTracyLazyAdapter contain itself - workaround for Tracy\ILogger service created statically
 			$initialize->addBody($builder->formatPhp(Debugger::class . '::setLogger(?);', [$this->prefix('@psrToTracyLazyAdapter')]));
 		}
 
