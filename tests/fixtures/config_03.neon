@@ -1,0 +1,4 @@
+monolog:
+	channel:
+		default:
+			handlers:

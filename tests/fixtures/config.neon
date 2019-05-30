@@ -3,6 +3,8 @@ monolog:
 		default:
 			handlers:
 				- Monolog\Handler\NullHandler
+			processors:
+				- Monolog\Processor\MemoryPeakUsageProcessor
 		foo:
 			handlers:
 				- Monolog\Handler\NullHandler
