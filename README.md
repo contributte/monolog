@@ -8,7 +8,7 @@
 [![Downloads this Month](https://img.shields.io/packagist/dm/contributte/monolog.svg?style=flat-square)](https://packagist.org/packages/contributte/monolog)
 [![Downloads total](https://img.shields.io/packagist/dt/contributte/monolog.svg?style=flat-square)](https://packagist.org/packages/contributte/monolog)
 [![Latest stable](https://img.shields.io/packagist/v/contributte/monolog.svg?style=flat-square)](https://packagist.org/packages/contributte/monolog)
-[![PHPStan](https://img.shields.io/badge/PHPStan-enabled-brightgreen.svg?style=flat)](https://github.com/phpstan/phpstan)
+[![PHPStan](https://img.shields.io/badge/PHPStan-enabled-brightgreen.svg?style=flat-square)](https://github.com/phpstan/phpstan)
 
 ## Documentation
 
@@ -20,10 +20,11 @@
 
 ## Versions
 
-| State       | Version | Branch   | PHP      |
-|-------------|---------|----------|----------|
-| stable      | `^0.2`  | `master` | `>= 7.2` |
-| stable      | `^0.1`  | `master` | `>= 7.1` |
+| State       | Version | Branch   | Nette | PHP     |
+|-------------|---------|----------|-------|---------|
+| development | `^0.4`  | `master` | 3.0+  | `^7.2`  |
+| stable      | `^0.3`  | `master` | 3.0+  | `^7.2`  |
+| stable      | `^0.2`  | `master` | 2.4   | `>=7.1` |
 
 
 ## Maintainers
