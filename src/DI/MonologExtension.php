@@ -2,7 +2,6 @@
 
 namespace Contributte\Monolog\DI;
 
-use Contributte\Monolog\Exception\Logic\InvalidArgumentException;
 use Contributte\Monolog\Exception\Logic\InvalidStateException;
 use Contributte\Monolog\LoggerHolder;
 use Contributte\Monolog\LoggerManager;
@@ -10,15 +9,20 @@ use Contributte\Monolog\Tracy\LazyTracyLogger;
 use Monolog\Handler\PsrHandler;
 use Monolog\Logger;
 use Nette\DI\CompilerExtension;
+use Nette\DI\Definitions\Definition;
 use Nette\DI\Definitions\Statement;
 use Nette\PhpGenerator\ClassType;
 use Nette\Schema\Expect;
 use Nette\Schema\Schema;
 use Nette\Utils\Strings;
+use stdClass;
 use Tracy\Bridges\Psr\PsrToTracyLoggerAdapter;
 use Tracy\Bridges\Psr\TracyToPsrLoggerAdapter;
 use Tracy\Debugger;
 
+/**
+ * @property-read stdClass $config
+ */
 class MonologExtension extends CompilerExtension
 {
 
@@ -26,32 +30,50 @@ class MonologExtension extends CompilerExtension
 	{
 		return Expect::structure([
 			'channel' => Expect::arrayOf(Expect::structure([
-				'handlers'   => Expect::array()->required()->min(1),
-				'processors' => Expect::array()->default([]),
-			])->castTo('array'))->required()->min(1),
-			'hook'    => Expect::structure([
-				'fromTracy' => Expect::bool()->default(true),
-				'toTracy'   => Expect::bool()->default(true),
-			])->castTo('array'),
-			'holder'  => Expect::structure([
-				'enabled' => Expect::bool()->default(false),
-			])->castTo('array'),
+				'handlers' => Expect::arrayOf(Expect::type('string|array|' . Statement::class))->required()->min(1),
+				'processors' => Expect::arrayOf(Expect::type('string|array|' . Statement::class)),
+			]))->required()->min(1),
+			'hook' => Expect::structure([
+				'fromTracy' => Expect::bool(true),
+				'toTracy' => Expect::bool(true),
+			]),
+			'holder' => Expect::structure([
+				'enabled' => Expect::bool(false),
+			]),
 			'manager' => Expect::structure([
-				'enabled' => Expect::bool()->default(false),
-			])->castTo('array'),
-		])->castTo('array');
+				'enabled' => Expect::bool(false),
+			]),
+		]);
+	}
+
+	/**
+	 * Used in loadConfiguration phase when definition of service defined in services cannot be get
+	 *
+	 * @param string|mixed[]|Statement $config
+	 * @return Definition|string
+	 */
+	private function getDefinitionFromConfig($config, string $preferredPrefix)
+	{
+		if (is_string($config) && Strings::startsWith($config, '@')) {
+			return $config;
+		}
+
+		$prefix = $preferredPrefix;
+		$this->compiler->loadDefinitionsFromConfig([$prefix => $config]);
+
+		return $this->getContainerBuilder()->getDefinition($prefix);
 	}
 
 	public function loadConfiguration(): void
 	{
-		$config = (array) $this->getConfig();
+		$config = $this->config;
 		$builder = $this->getContainerBuilder();
 
-		if (!isset($config['channel']['default'])) {
+		if (!isset($config->channel['default'])) {
 			throw new InvalidStateException(sprintf('%s.channel.default is required.', $this->name));
 		}
 
-		if ($config['manager']['enabled']) {
+		if ($config->manager->enabled) {
 			$builder->addDefinition($this->prefix('manager'))
 				->setFactory(LoggerManager::class, [
 					$this->prefix('logger'),
@@ -60,51 +82,51 @@ class MonologExtension extends CompilerExtension
 
 		$tracyHandler = null;
 
-		if (class_exists(Debugger::class) && $config['hook']['toTracy'] && $builder->hasDefinition('tracy.logger')) {
+		if ($config->hook->toTracy && class_exists(Debugger::class) && $builder->hasDefinition('tracy.logger')) {
 			$tracyAdapter = new Statement(TracyToPsrLoggerAdapter::class, ['@tracy.logger']);
 			$tracyHandler = new Statement(PsrHandler::class, [$tracyAdapter]);
 		}
 
-		foreach ($config['channel'] as $name => $channel) {
-			if (!is_string($name)) {
-				throw new InvalidArgumentException(sprintf('%s.channel.%s name must be a string', $this->name, (string) $name));
-			}
+		foreach ($config->channel as $name => $channel) {
+			$name = (string) $name;
 
 			if ($tracyHandler !== null) {
-				$channel['handlers']['tracy'] = $tracyHandler;
+				$channel->handlers['tracy'] = $tracyHandler;
 			}
 
-			// Register handlers same way as services (setup, arguments, type etc.)
-			foreach ($channel['handlers'] as $handlerKey => $handlerValue) {
-				// Don't register handler as service, it's already registered service
-				if (is_string($handlerValue) && Strings::startsWith($handlerValue, '@')) {
-					continue;
+			// Register handlers
+			$handlerDefinitions = [];
+
+			foreach ($channel->handlers as $handlerName => $handlerConfig) {
+				$handlerPrefix = $this->prefix('logger.' . $name . '.handler.' . $handlerName);
+				$handlerDefinition = $this->getDefinitionFromConfig($handlerConfig, $handlerPrefix);
+
+				if ($handlerDefinition instanceof Definition) {
+					$handlerDefinition->setAutowired(false);
 				}
 
-				$handlerName = $this->prefix('logger.' . $name . '.handler.' . $handlerKey);
-				$this->compiler->loadDefinitionsFromConfig([$handlerName => $handlerValue]);
-				$builder->getDefinition($handlerName)->setAutowired(false);
-				$channel['handlers'][$handlerKey] = '@' . $handlerName;
+				$handlerDefinitions[] = $handlerDefinition;
 			}
 
-			// Register processors same way as services (setup, arguments, type etc.)
-			foreach ($channel['processors'] as $processorKey => $processorValue) {
-				// Don't register processor as service, it's already registered service
-				if (is_string($processorValue) && Strings::startsWith($processorValue, '@')) {
-					continue;
+			// Register processors
+			$processorDefinitions = [];
+
+			foreach ($channel->processors as $processorName => $processorConfig) {
+				$processorPrefix = $this->prefix('logger.' . $name . '.processor.' . $processorName);
+				$processorDefinition = $this->getDefinitionFromConfig($processorConfig, $processorPrefix);
+
+				if ($processorDefinition instanceof Definition) {
+					$processorDefinition->setAutowired(false);
 				}
 
-				$processorName = $this->prefix('logger.' . $name . '.processor.' . $processorKey);
-				$this->compiler->loadDefinitionsFromConfig([$processorName => $processorValue]);
-				$builder->getDefinition($processorName)->setAutowired(false);
-				$channel['processors'][$processorKey] = '@' . $processorName;
+				$processorDefinitions[] = $processorDefinition;
 			}
 
 			$logger = $builder->addDefinition($this->prefix('logger.' . $name))
 				->setFactory(Logger::class, [
 					$name,
-					$channel['handlers'],
-					$channel['processors'],
+					$handlerDefinitions,
+					$processorDefinitions,
 				]);
 
 			// Only default logger is autowired
@@ -113,7 +135,7 @@ class MonologExtension extends CompilerExtension
 			}
 		}
 
-		if (class_exists(Debugger::class) && $config['hook']['fromTracy'] && $builder->hasDefinition('tracy.logger')) {
+		if ($config->hook->fromTracy && class_exists(Debugger::class) && $builder->hasDefinition('tracy.logger')) {
 			$builder->getDefinition('tracy.logger')
 				->setAutowired(false);
 
@@ -129,15 +151,15 @@ class MonologExtension extends CompilerExtension
 	public function afterCompile(ClassType $class): void
 	{
 		$builder = $this->getContainerBuilder();
-		$config = (array) $this->getConfig();
+		$config = $this->config;
 		$initialize = $class->getMethod('initialize');
 
-		if (class_exists(Debugger::class) && $config['hook']['fromTracy'] && $builder->hasDefinition('tracy.logger')) {
+		if ($config->hook->fromTracy && class_exists(Debugger::class) && $builder->hasDefinition('tracy.logger')) {
 			$initialize->addBody('$this->getService("tracy.logger");'); // Create original Tracy\Logger service to prevent psrToTracyLazyAdapter contain itself - workaround for Tracy\ILogger service created statically
 			$initialize->addBody(Debugger::class . '::setLogger($this->getService(?));', [$this->prefix('psrToTracyLazyAdapter')]);
 		}
 
-		if ($config['holder']['enabled']) {
+		if ($config->holder->enabled) {
 			$initialize->addBody(LoggerHolder::class . '::setLogger(?, $this);', [$this->prefix('logger.default')]);
 		}
 	}
