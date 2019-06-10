@@ -1,4 +1,4 @@
-# Monolog
+# Contributte Monolog
 
 [Monolog](https://github.com/Seldaek/monolog/) integration into [Nette/DI](https://github.com/nette/di)
 
