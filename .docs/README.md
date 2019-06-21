@@ -4,6 +4,15 @@
 
 See also [Monolog documentation](https://github.com/Seldaek/monolog#documentation), this is only an integration.
 
+## Content
+
+- [Setup](#setup)
+- [Configuration](#configuration)
+    - [Tracy](#tracy)
+- [Logging](#logging)
+- [Logger manager](#loggermanager)
+- [Logger holder](#loggerholder)
+
 ## Setup
 
 Install package
