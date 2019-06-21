@@ -23,9 +23,6 @@ extensions:
 
 ```yaml
 monolog:
-    hook:
-      fromTracy: true # enabled by default, log through Tracy into Monolog
-      toTracy: true # enabled by default, log through Monolog into Tracy
     channel:
         default: # default channel is required
             handlers:
@@ -37,9 +34,21 @@ monolog:
                         - %appDir%/../log/syslog.log
                         - 30
                         - Monolog\Logger::WARNING
+                - @serviceName # or reference an existing service
             processors:
                 -  Monolog\Processor\MemoryPeakUsageProcessor()
 ```
+
+### Tracy
+
+```yaml
+monolog:
+    hook:
+      fromTracy: true # enabled by default, log through Tracy into Monolog
+      toTracy: true # enabled by default, log through Monolog into Tracy
+```
+
+You may also want configure remote storage for Tracy bluescreens. In this case use [mangoweb-backend/monolog-tracy-handler](https://github.com/mangoweb-backend/monolog-tracy-handler)
 
 ## Logging
 

@@ -14,6 +14,7 @@
 
 - [Setup](.docs/README.md#setup)
 - [Configuration](.docs/README.md#configuration)
+    - [Tracy](.docs/README.md#tracy)
 - [Logging](.docs/README.md#logging)
 - [Logger manager](.docs/README.md#loggermanager)
 - [Logger holder](.docs/README.md#loggerholder)
