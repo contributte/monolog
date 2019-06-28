@@ -2,6 +2,7 @@
 
 namespace Contributte\Monolog\DI;
 
+use Contributte\DI\Helper\ExtensionDefinitionsHelper;
 use Contributte\Monolog\Exception\Logic\InvalidStateException;
 use Contributte\Monolog\LoggerHolder;
 use Contributte\Monolog\LoggerManager;
@@ -14,7 +15,6 @@ use Nette\DI\Definitions\Statement;
 use Nette\PhpGenerator\ClassType;
 use Nette\Schema\Expect;
 use Nette\Schema\Schema;
-use Nette\Utils\Strings;
 use stdClass;
 use Tracy\Bridges\Psr\PsrToTracyLoggerAdapter;
 use Tracy\Bridges\Psr\TracyToPsrLoggerAdapter;
@@ -46,28 +46,11 @@ class MonologExtension extends CompilerExtension
 		]);
 	}
 
-	/**
-	 * Used in loadConfiguration phase when definition of service defined in services cannot be get
-	 *
-	 * @param string|mixed[]|Statement $config
-	 * @return Definition|string
-	 */
-	private function getDefinitionFromConfig($config, string $preferredPrefix)
-	{
-		if (is_string($config) && Strings::startsWith($config, '@')) {
-			return $config;
-		}
-
-		$prefix = $preferredPrefix;
-		$this->compiler->loadDefinitionsFromConfig([$prefix => $config]);
-
-		return $this->getContainerBuilder()->getDefinition($prefix);
-	}
-
 	public function loadConfiguration(): void
 	{
 		$config = $this->config;
 		$builder = $this->getContainerBuilder();
+		$definitionsHelper = new ExtensionDefinitionsHelper($this->compiler);
 
 		if (!isset($config->channel['default'])) {
 			throw new InvalidStateException(sprintf('%s.channel.default is required.', $this->name));
@@ -99,7 +82,7 @@ class MonologExtension extends CompilerExtension
 
 			foreach ($channel->handlers as $handlerName => $handlerConfig) {
 				$handlerPrefix = $this->prefix('logger.' . $name . '.handler.' . $handlerName);
-				$handlerDefinition = $this->getDefinitionFromConfig($handlerConfig, $handlerPrefix);
+				$handlerDefinition = $definitionsHelper->getDefinitionFromConfig($handlerConfig, $handlerPrefix);
 
 				if ($handlerDefinition instanceof Definition) {
 					$handlerDefinition->setAutowired(false);
@@ -113,7 +96,7 @@ class MonologExtension extends CompilerExtension
 
 			foreach ($channel->processors as $processorName => $processorConfig) {
 				$processorPrefix = $this->prefix('logger.' . $name . '.processor.' . $processorName);
-				$processorDefinition = $this->getDefinitionFromConfig($processorConfig, $processorPrefix);
+				$processorDefinition = $definitionsHelper->getDefinitionFromConfig($processorConfig, $processorPrefix);
 
 				if ($processorDefinition instanceof Definition) {
 					$processorDefinition->setAutowired(false);
