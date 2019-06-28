@@ -30,8 +30,12 @@ class MonologExtension extends CompilerExtension
 	{
 		return Expect::structure([
 			'channel' => Expect::arrayOf(Expect::structure([
-				'handlers' => Expect::arrayOf(Expect::type('string|array|' . Statement::class))->required()->min(1),
-				'processors' => Expect::arrayOf(Expect::type('string|array|' . Statement::class)),
+				'handlers' => Expect::arrayOf(
+					Expect::anyOf(Expect::string(), Expect::array(), Expect::type(Statement::class))
+				)->required()->min(1),
+				'processors' => Expect::arrayOf(
+					Expect::anyOf(Expect::string(), Expect::array(), Expect::type(Statement::class))
+				),
 			]))->required()->min(1),
 			'hook' => Expect::structure([
 				'fromTracy' => Expect::bool(true),
