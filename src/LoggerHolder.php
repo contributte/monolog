@@ -46,7 +46,7 @@ class LoggerHolder
 		return static::$instSelf;
 	}
 
-	public function __construct(Logger $logger)
+	final public function __construct(Logger $logger)
 	{
 		$this->instLogger = $logger;
 	}
