@@ -1,23 +1,41 @@
-# Contributte Monolog
+![Contributte Monolog](https://heatbadger.now.sh/github/readme/contributte/monolog/)
 
-[Monolog](https://github.com/Seldaek/monolog/) integration into [Nette/DI](https://github.com/nette/di)
+<p align=center>
+  <a href="https://github.com/contributte/monolog/actions">
+    <img src="https://badgen.net/github/checks/contributte/monolog/master?cache=300">
+  </a>
+  <a href="https://coveralls.io/r/contributte/monolog">
+    <img src="https://badgen.net/coveralls/c/github/contributte/monolog?cache=300">
+  </a>
+  <a href="https://packagist.org/packages/contributte/monolog">
+    <img src="https://badgen.net/packagist/dm/contributte/monolog">
+  </a>
+  <a href="https://packagist.org/packages/contributte/monolog">
+    <img src="https://badgen.net/packagist/v/contributte/monolog">
+  </a>
+  <a href="http://bit.ly/ctteg">
+    <img src="https://badgen.net/badge/chat/gitter/cyan">
+  </a>
+  <a href="https://contributte.org/partners.html">
+    <img src="https://badgen.net/badge/become/a%20patron/F96854">
+  </a>
+<p>
 
-[![Build Status](https://img.shields.io/travis/contributte/monolog.svg?style=flat-square)](https://travis-ci.org/contributte/monolog)
-[![Code coverage](https://img.shields.io/coveralls/contributte/monolog.svg?style=flat-square)](https://coveralls.io/r/contributte/monolog)
-[![Licence](https://img.shields.io/packagist/l/contributte/monolog.svg?style=flat-square)](https://packagist.org/packages/contributte/monolog)
-[![Downloads this Month](https://img.shields.io/packagist/dm/contributte/monolog.svg?style=flat-square)](https://packagist.org/packages/contributte/monolog)
-[![Downloads total](https://img.shields.io/packagist/dt/contributte/monolog.svg?style=flat-square)](https://packagist.org/packages/contributte/monolog)
-[![Latest stable](https://img.shields.io/packagist/v/contributte/monolog.svg?style=flat-square)](https://packagist.org/packages/contributte/monolog)
-[![PHPStan](https://img.shields.io/badge/PHPStan-enabled-brightgreen.svg?style=flat-square)](https://github.com/phpstan/phpstan)
+<p align=center>
+Website 🚀 <a href="https://contributte.org">contributte.org</a> | Contact 👨🏻‍💻 <a href="https://f3l1x.io">f3l1x.io</a> | Twitter 🐦 <a href="https://twitter.com/contributte">@contributte</a>
+</p>
+
+## Usage
+
+To install the latest version of `contributte/monolog` use [Composer](https://getcomposer.com).
+
+```
+composer require contributte/monolog
+```
 
 ## Documentation
 
-- [Setup](.docs/README.md#setup)
-- [Configuration](.docs/README.md#configuration)
-    - [Tracy](.docs/README.md#tracy)
-- [Logging](.docs/README.md#logging)
-- [Logger manager](.docs/README.md#loggermanager)
-- [Logger holder](.docs/README.md#loggerholder)
+For details on how to use this package, check out our [documentation](.docs).
 
 ## Versions
 
@@ -27,19 +45,18 @@
 | stable      | `^0.4`  | `master` | 3.0+  | `^7.2`  |
 | stable      | `^0.2`  | `master` | 2.4   | `>=7.1` |
 
+## Development
 
-## Maintainers
+See [how to contribute](https://contributte.org/contributing.html) to this package.
 
-<table>
-  <tbody>
-    <tr>
-      <td align="center">
-        <a href="https://github.com/f3l1x">
-            <img width="150" height="150" src="https://avatars2.githubusercontent.com/u/538058?v=3&s=150">
-        </a>
-        </br>
-        <a href="https://github.com/f3l1x">Milan Felix Šulc</a>
-      </td>
-    </tr>
-  </tbody>
-</table>
+This package is currently maintaining by these authors.
+
+<a href="https://github.com/f3l1x">
+  <img width="80" height="80" src="https://avatars2.githubusercontent.com/u/538058?v=3&s=80">
+</a>
+
+-----
+
+Consider to [support](https://contributte.org/partners.html) **contributte** development team.
+Also thank you for using this package.
+
