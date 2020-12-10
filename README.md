@@ -1,25 +1,18 @@
-![Contributte Monolog](https://heatbadger.now.sh/github/readme/contributte/monolog/)
+![](https://heatbadger.now.sh/github/readme/contributte/monolog/)
 
 <p align=center>
-  <a href="https://github.com/contributte/monolog/actions">
-    <img src="https://badgen.net/github/checks/contributte/monolog/master?cache=300">
-  </a>
-  <a href="https://coveralls.io/r/contributte/monolog">
-    <img src="https://badgen.net/coveralls/c/github/contributte/monolog?cache=300">
-  </a>
-  <a href="https://packagist.org/packages/contributte/monolog">
-    <img src="https://badgen.net/packagist/dm/contributte/monolog">
-  </a>
-  <a href="https://packagist.org/packages/contributte/monolog">
-    <img src="https://badgen.net/packagist/v/contributte/monolog">
-  </a>
-  <a href="http://bit.ly/ctteg">
-    <img src="https://badgen.net/badge/chat/gitter/cyan">
-  </a>
-  <a href="https://contributte.org/partners.html">
-    <img src="https://badgen.net/badge/become/a%20patron/F96854">
-  </a>
-<p>
+  <a href="https://github.com/contributte/monolog/actions"><img src="https://badgen.net/github/checks/contributte/monolog/master?cache=300"></a>
+  <a href="https://coveralls.io/r/contributte/monolog"><img src="https://badgen.net/coveralls/c/github/contributte/monolog?cache=300"></a>
+  <a href="https://packagist.org/packages/contributte/monolog"><img src="https://badgen.net/packagist/dm/contributte/monolog"></a>
+  <a href="https://packagist.org/packages/contributte/monolog"><img src="https://badgen.net/packagist/v/contributte/monolog"></a>
+</p>
+<p align=center>
+  <a href="https://packagist.org/packages/contributte/monolog"><img src="https://badgen.net/packagist/php/contributte/monolog"></a>
+  <a href="https://github.com/contributte/monolog"><img src="https://badgen.net/github/license/contributte/monolog"></a>
+  <a href="https://bit.ly/ctteg"><img src="https://badgen.net/badge/support/gitter/cyan"></a>
+  <a href="https://bit.ly/cttfo"><img src="https://badgen.net/badge/support/forum/yellow"></a>
+  <a href="https://contributte.org/partners.html"><img src="https://badgen.net/badge/sponsor/donations/F96854"></a>
+</p>
 
 <p align=center>
 Website 🚀 <a href="https://contributte.org">contributte.org</a> | Contact 👨🏻‍💻 <a href="https://f3l1x.io">f3l1x.io</a> | Twitter 🐦 <a href="https://twitter.com/contributte">@contributte</a>
@@ -41,8 +34,8 @@ For details on how to use this package, check out our [documentation](.docs).
 
 | State       | Version | Branch   | Nette | PHP     |
 |-------------|---------|----------|-------|---------|
-| development | `^0.5`  | `master` | 3.0+  | `>=7.2`  |
-| stable      | `^0.4`  | `master` | 3.0+  | `^7.2`  |
+| dev         | `^0.6`  | `master` | 3.0+  | `>=7.2`  |
+| stable      | `^0.5`  | `master` | 3.0+  | `>=7.2`  |
 | stable      | `^0.2`  | `master` | 2.4   | `>=7.1` |
 
 ## Development
