@@ -7,7 +7,7 @@
 		<properties>
 			<property name="rootNamespaces" type="array">
 				<element key="src" value="Contributte\Monolog"/>
-				<element key="tests/fixtures" value="Tests\Cases"/>
+				<element key="tests/cases" value="Tests\Cases"/>
 			</property>
 		</properties>
 	</rule>
