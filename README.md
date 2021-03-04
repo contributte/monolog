@@ -22,8 +22,8 @@ Website ðŸš€ <a href="https://contributte.org">contributte.org</a> | Contact ðŸ‘
 
 To install the latest version of `contributte/monolog` use [Composer](https://getcomposer.org).
 
-```
-$ composer require contributte/monolog
+```bash
+composer require contributte/monolog
 ```
 
 ## Documentation
