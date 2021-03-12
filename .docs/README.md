@@ -8,7 +8,7 @@ See also [Monolog documentation](https://github.com/Seldaek/monolog#documentatio
 
 - [Setup](#setup)
 - [Configuration](#configuration)
-    - [Tracy](#tracy)
+	- [Tracy](#tracy)
 - [Logging](#logging)
 - [Logger manager](#loggermanager)
 - [Logger holder](#loggerholder)
@@ -23,38 +23,38 @@ composer require contributte/monolog
 
 Register extension
 
-```yaml
+```neon
 extensions:
-    monolog: Contributte\Monolog\DI\MonologExtension
+	monolog: Contributte\Monolog\DI\MonologExtension
 ```
 
 ## Configuration
 
-```yaml
+```neon
 monolog:
-    channel:
-        default: # default channel is required
-            handlers:
-                - Monolog\Handler\RotatingFileHandler(%appDir%/../log/syslog.log, 30, Monolog\Logger::WARNING)
-                # you can use same configuration as in services section (with setup, type, arguments, etc.)
-                -
-                    type: Monolog\Handler\RotatingFileHandler
-                    arguments:
-                        - %appDir%/../log/syslog.log
-                        - 30
-                        - Monolog\Logger::WARNING
-                - @serviceName # or reference an existing service
-            processors:
-                -  Monolog\Processor\MemoryPeakUsageProcessor()
+	channel:
+		default: # default channel is required
+			handlers:
+				- Monolog\Handler\RotatingFileHandler(%appDir%/../log/syslog.log, 30, Monolog\Logger::WARNING)
+				# you can use same configuration as in services section (with setup, type, arguments, etc.)
+				-
+					type: Monolog\Handler\RotatingFileHandler
+					arguments:
+						- %appDir%/../log/syslog.log
+						- 30
+						- Monolog\Logger::WARNING
+				- @serviceName # or reference an existing service
+			processors:
+				-  Monolog\Processor\MemoryPeakUsageProcessor()
 ```
 
 ### Tracy
 
-```yaml
+```neon
 monolog:
-    hook:
-      fromTracy: true # enabled by default, log through Tracy into Monolog
-      toTracy: true # enabled by default, log through Monolog into Tracy
+	hook:
+		fromTracy: true # enabled by default, log through Tracy into Monolog
+		toTracy: true # enabled by default, log through Monolog into Tracy
 ```
 
 You may also want configure remote storage for Tracy bluescreens. In this case use [mangoweb-backend/monolog-tracy-handler](https://github.com/mangoweb-backend/monolog-tracy-handler)
@@ -69,18 +69,18 @@ use Psr\Log\LoggerInterface;
 class ExampleService
 {
 
-    /** @var LoggerInterface **/
-    private $logger;
+	/** @var LoggerInterface **/
+	private $logger;
 
-    public function injectLogger(LoggerInterface $logger): void
-    {
-        $this->logger = $logger;
-    }
+	public function injectLogger(LoggerInterface $logger): void
+	{
+		$this->logger = $logger;
+	}
 
-    public function doSomething(): void
-    {
-        $this->logger->info('Log that application did something');
-    }
+	public function doSomething(): void
+	{
+		$this->logger->info('Log that application did something');
+	}
 
 }
 ```
@@ -89,10 +89,10 @@ class ExampleService
 
 You could also use logger manager in case you need to use multiple logger at once.
 
-```yaml
+```neon
 monolog:
-    manager:
-        enabled: false # disabled by default
+	manager:
+		enabled: false # disabled by default
 ```
 
 ```php
@@ -101,19 +101,19 @@ use Contributte\Monolog\LoggerManager;
 class ExampleService
 {
 
-    /** @var LoggerManager **/
-    private $loggerManager;
+	/** @var LoggerManager **/
+	private $loggerManager;
 
-    public function injectLoggerManager(LoggerManager $loggerManager): void
-    {
-        $this->loggerManager = $loggerManager;
-    }
+	public function injectLoggerManager(LoggerManager $loggerManager): void
+	{
+		$this->loggerManager = $loggerManager;
+	}
 
-    public function doSomething(): void
-    {
-        $this->loggerManager->get('default')->info('Log that application did something');
-        $this->loggerManager->get('specialLogger')->info('Log something very special');
-    }
+	public function doSomething(): void
+	{
+		$this->loggerManager->get('default')->info('Log that application did something');
+		$this->loggerManager->get('specialLogger')->info('Log something very special');
+	}
 
 }
 ```
@@ -124,10 +124,10 @@ Allow you get default logger statically in case that DIC is not available.
 
 It add into message info about which class (or file) called LoggerHolder for easier debugging.
 
-```yaml
+```neon
 monolog:
-    holder:
-        enabled: false # disabled by default
+	holder:
+		enabled: false # disabled by default
 ```
 
 ```php
@@ -136,10 +136,10 @@ use Contributte\Monolog\LoggerHolder;
 class VerySpecialClassWithoutDependencyInjectionContainerAvailable
 {
 
-    public function doSomething(): void
-    {
-        LoggerHolder::getInstance()->getLogger()->info('Log that application did something');
-    }
+	public function doSomething(): void
+	{
+		LoggerHolder::getInstance()->getLogger()->info('Log that application did something');
+	}
 
 }
 ```
