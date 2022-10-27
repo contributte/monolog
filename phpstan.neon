@@ -5,5 +5,6 @@ includes:
 	- vendor/phpstan/phpstan-strict-rules/rules.neon
 
 parameters:
-	ignoreErrors:
-		- '#^Method Contributte\\Monolog\\Tracy\\LazyTracyLogger\:\:log\(\) has parameter (\$priority|\$value) with no typehint specified\.$#'
+	level: 9
+	paths:
+		- src
