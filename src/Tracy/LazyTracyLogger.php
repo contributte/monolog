@@ -25,7 +25,8 @@ class LazyTracyLogger implements ILogger
 	}
 
 	/**
-	 * @inheritdoc
+	 * @param mixed $value
+	 * @param mixed $priority
 	 */
 	public function log($value, $priority = self::INFO): void
 	{

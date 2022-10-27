@@ -24,8 +24,8 @@ class LoggerHolder
 
 	public static function setLogger(string $loggerServiceName, Container $container): void
 	{
-		static::$loggerServiceName = $loggerServiceName;
-		static::$container = $container;
+		self::$loggerServiceName = $loggerServiceName;
+		self::$container = $container;
 	}
 
 	/**
@@ -33,17 +33,17 @@ class LoggerHolder
 	 */
 	public static function getInstance(): self
 	{
-		if (static::$instSelf === null) {
-			if (static::$loggerServiceName === null || static::$container === null) {
-				throw new InvalidStateException(sprintf('Call %s::setLogger to use %s::getInstance', static::class, static::class));
+		if (self::$instSelf === null) {
+			if (self::$loggerServiceName === null || self::$container === null) {
+				throw new InvalidStateException(sprintf('Call %s::setLogger to use %s::getInstance', self::class, self::class));
 			}
 
 			/** @var Logger $logger */
-			$logger = static::$container->getService(static::$loggerServiceName);
-			static::$instSelf = new static($logger);
+			$logger = self::$container->getService(self::$loggerServiceName);
+			self::$instSelf = new static($logger);
 		}
 
-		return static::$instSelf;
+		return self::$instSelf;
 	}
 
 	final public function __construct(Logger $logger)
@@ -55,7 +55,7 @@ class LoggerHolder
 	{
 		$backtrace = debug_backtrace();
 		// Get class which called this or file if class does not exist
-		$calledBy = $backtrace[1]['class'] ?? $backtrace[0]['file'];
+		$calledBy = $backtrace[1]['class'] ?? $backtrace[0]['file'] ?? $backtrace[0]['function'];
 
 		$logger = clone $this->instLogger;
 
