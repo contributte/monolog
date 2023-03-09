@@ -18,7 +18,7 @@
   "require": {
     "php": ">=7.2",
     "contributte/di": "^0.5.3",
-    "monolog/monolog": "^2.0.0",
+    "monolog/monolog": "^2.0.0 || ^3.0.0",
     "nette/utils": "^3.0.0"
   },
   "require-dev": {
