@@ -4,6 +4,7 @@ namespace Contributte\Monolog;
 
 use Contributte\Monolog\Exception\Logic\InvalidStateException;
 use Monolog\Logger;
+use Monolog\LogRecord;
 use Nette\DI\Container;
 use Psr\Log\LoggerInterface;
 
@@ -60,7 +61,7 @@ class LoggerHolder
 		$logger = clone $this->instLogger;
 
 		// Write in log which class used LoggerHolder
-		$logger->pushProcessor(function (array $record) use ($calledBy): array {
+		$logger->pushProcessor(function (array|LogRecord $record) use ($calledBy): array|LogRecord {
 			$record['extra']['calledBy'] = $calledBy;
 
 			return $record;
