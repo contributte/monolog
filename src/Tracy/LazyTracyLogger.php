@@ -9,14 +9,11 @@ use Tracy\ILogger;
 class LazyTracyLogger implements ILogger
 {
 
-	/** @var string */
-	private $loggerServiceName;
+	private string $loggerServiceName;
 
-	/** @var Container */
-	private $container;
+	private Container $container;
 
-	/** @var PsrToTracyLoggerAdapter|null */
-	private $internalLogger;
+	private ?PsrToTracyLoggerAdapter $internalLogger = null;
 
 	public function __construct(string $loggerServiceName, Container $container)
 	{
@@ -24,11 +21,7 @@ class LazyTracyLogger implements ILogger
 		$this->container = $container;
 	}
 
-	/**
-	 * @param mixed $value
-	 * @param mixed $priority
-	 */
-	public function log($value, $priority = self::INFO): void
+	public function log(mixed $value, mixed $priority = self::INFO): void
 	{
 		if ($this->internalLogger === null) {
 			$this->internalLogger = $this->container->getService($this->loggerServiceName);

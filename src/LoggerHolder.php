@@ -11,22 +11,18 @@ use Psr\Log\LoggerInterface;
 class LoggerHolder
 {
 
-	/** @var string|null */
-	private static $loggerServiceName;
+	private static ?string $loggerServiceName = null;
 
-	/** @var Container|null */
-	private static $container;
+	private static ?Container $container = null;
 
 	/** @var static|null */
 	private static $instSelf;
 
-	/** @var Logger */
-	private $instLogger;
+	private Logger $instLogger;
 
-	public static function setLogger(string $loggerServiceName, Container $container): void
+	final public function __construct(Logger $logger)
 	{
-		self::$loggerServiceName = $loggerServiceName;
-		self::$container = $container;
+		$this->instLogger = $logger;
 	}
 
 	/**
@@ -47,9 +43,10 @@ class LoggerHolder
 		return self::$instSelf;
 	}
 
-	final public function __construct(Logger $logger)
+	public static function setLogger(string $loggerServiceName, Container $container): void
 	{
-		$this->instLogger = $logger;
+		self::$loggerServiceName = $loggerServiceName;
+		self::$container = $container;
 	}
 
 	public function getLogger(): LoggerInterface
@@ -69,13 +66,13 @@ class LoggerHolder
 				return $record;
 			});
 		} else {
+			// @phpstan-ignore argument.type (Monolog 2.x compatibility)
 			$logger->pushProcessor(function (array $record) use ($calledBy): array {
 				$record['extra']['calledBy'] = $calledBy;
 
 				return $record;
 			});
 		}
-
 
 		return $logger;
 	}
