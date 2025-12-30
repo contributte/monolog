@@ -9,11 +9,9 @@ use Psr\Log\LoggerInterface;
 class LoggerManager
 {
 
-	/** @var string */
-	private $prefix;
+	private string $prefix;
 
-	/** @var Container */
-	private $container;
+	private Container $container;
 
 	public function __construct(string $prefix, Container $container)
 	{
