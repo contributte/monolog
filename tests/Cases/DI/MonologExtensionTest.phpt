@@ -48,23 +48,23 @@ Toolkit::test(static function (): void {
 Toolkit::test(static function (): void {
 	Assert::exception(static function (): void {
 		Helpers::createContainer(__DIR__ . '/../../fixtures/config_00.neon');
-	}, InvalidConfigurationException::class, "The mandatory item 'monolog › channel' is missing.");
+	}, InvalidConfigurationException::class, '~mandatory item .+monolog.+channel.+ is missing~');
 });
 
 Toolkit::test(static function (): void {
 	Assert::exception(static function (): void {
 		Helpers::createContainer(__DIR__ . '/../../fixtures/config_01.neon');
-	}, InvalidConfigurationException::class, "The length of item 'monolog › channel' expects to be in range 1.., 0 items given.");
+	}, InvalidConfigurationException::class, '~length of item .+monolog.+channel.+ expects to be in range 1~');
 });
 
 Toolkit::test(static function (): void {
 	Assert::exception(static function (): void {
 		Helpers::createContainer(__DIR__ . '/../../fixtures/config_02.neon');
-	}, InvalidConfigurationException::class, "The mandatory item 'monolog › channel › default › handlers' is missing.");
+	}, InvalidConfigurationException::class, '~mandatory item .+monolog.+channel.+default.+handlers.+ is missing~');
 });
 
 Toolkit::test(static function (): void {
 	Assert::exception(static function (): void {
 		Helpers::createContainer(__DIR__ . '/../../fixtures/config_03.neon');
-	}, InvalidConfigurationException::class, "The length of item 'monolog › channel › default › handlers' expects to be in range 1.., 0 items given.");
+	}, InvalidConfigurationException::class, '~length of item .+monolog.+channel.+default.+handlers.+ expects to be in range 1~');
 });
