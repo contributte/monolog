@@ -2,7 +2,7 @@
 
 namespace Contributte\Monolog\DI;
 
-use Contributte\DI\Helper\ExtensionDefinitionsHelper;
+use Contributte\Monolog\DI\Helpers\SmartStatement;
 use Contributte\Monolog\Exception\Logic\InvalidStateException;
 use Contributte\Monolog\LoggerHolder;
 use Contributte\Monolog\LoggerManager;
@@ -10,7 +10,6 @@ use Contributte\Monolog\Tracy\LazyTracyLogger;
 use Monolog\Handler\PsrHandler;
 use Monolog\Logger;
 use Nette\DI\CompilerExtension;
-use Nette\DI\Definitions\Definition;
 use Nette\DI\Definitions\Statement;
 use Nette\PhpGenerator\ClassType;
 use Nette\Schema\Expect;
@@ -31,10 +30,10 @@ class MonologExtension extends CompilerExtension
 		return Expect::structure([
 			'channel' => Expect::arrayOf(Expect::structure([
 				'handlers' => Expect::arrayOf(
-					Expect::anyOf(Expect::string(), Expect::array(), Expect::type(Statement::class))
+					Expect::anyOf(Expect::string(), Expect::type(Statement::class))
 				)->required()->min(1),
 				'processors' => Expect::arrayOf(
-					Expect::anyOf(Expect::string(), Expect::array(), Expect::type(Statement::class))
+					Expect::anyOf(Expect::string(), Expect::type(Statement::class))
 				),
 			]))->required()->min(1),
 			'hook' => Expect::structure([
@@ -54,7 +53,6 @@ class MonologExtension extends CompilerExtension
 	{
 		$config = $this->config;
 		$builder = $this->getContainerBuilder();
-		$definitionsHelper = new ExtensionDefinitionsHelper($this->compiler);
 
 		if (!isset($config->channel['default'])) {
 			throw new InvalidStateException(sprintf('%s.channel.default is required.', $this->name));
@@ -81,39 +79,11 @@ class MonologExtension extends CompilerExtension
 				$channel->handlers['tracy'] = $tracyHandler;
 			}
 
-			// Register handlers
-			$handlerDefinitions = [];
-
-			foreach ($channel->handlers as $handlerName => $handlerConfig) {
-				$handlerPrefix = $this->prefix('logger.' . $name . '.handler.' . $handlerName);
-				$handlerDefinition = $definitionsHelper->getDefinitionFromConfig($handlerConfig, $handlerPrefix);
-
-				if ($handlerDefinition instanceof Definition) {
-					$handlerDefinition->setAutowired(false);
-				}
-
-				$handlerDefinitions[] = $handlerDefinition;
-			}
-
-			// Register processors
-			$processorDefinitions = [];
-
-			foreach ($channel->processors as $processorName => $processorConfig) {
-				$processorPrefix = $this->prefix('logger.' . $name . '.processor.' . $processorName);
-				$processorDefinition = $definitionsHelper->getDefinitionFromConfig($processorConfig, $processorPrefix);
-
-				if ($processorDefinition instanceof Definition) {
-					$processorDefinition->setAutowired(false);
-				}
-
-				$processorDefinitions[] = $processorDefinition;
-			}
-
 			$logger = $builder->addDefinition($this->prefix('logger.' . $name))
 				->setFactory(Logger::class, [
 					$name,
-					$handlerDefinitions,
-					$processorDefinitions,
+					array_map(static fn ($handler) => SmartStatement::from($handler), $channel->handlers),
+					array_map(static fn ($processor) => SmartStatement::from($processor), $channel->processors),
 				]);
 
 			// Only default logger is autowired
