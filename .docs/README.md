@@ -38,12 +38,26 @@ extensions:
 
 ### Channels
 
-You can configure multiple logging channels. The `default` channel is required and is the only one that is autowired.
+You can configure multiple logging channels. The `default` channel (see `defaultChannel` below) is required and is the only one that is autowired.
 
 ```neon
 monolog:
     channel:
         default:
+            handlers:
+                - Monolog\Handler\StreamHandler(%appDir%/../log/app.log)
+        api:
+            handlers:
+                - Monolog\Handler\StreamHandler(%appDir%/../log/api.log)
+```
+
+The name of the default channel can be changed with `defaultChannel` (defaults to `default`). The configured channel is then required, autowired and used by [LoggerHolder](#loggerholder).
+
+```neon
+monolog:
+    defaultChannel: app
+    channel:
+        app:
             handlers:
                 - Monolog\Handler\StreamHandler(%appDir%/../log/app.log)
         api:
@@ -101,7 +115,7 @@ monolog:
 
 ### Logging
 
-Inject the logger using constructor injection or `inject*` method. Only the `default` channel is autowired.
+Inject the logger using constructor injection or `inject*` method. Only the default channel (`default`, or the one set by `defaultChannel`) is autowired.
 
 ```php
 use Psr\Log\LoggerInterface;
@@ -188,6 +202,7 @@ class LegacyCode
 
 ```neon
 monolog:
+    defaultChannel: default
     channel:
         default:
             handlers:

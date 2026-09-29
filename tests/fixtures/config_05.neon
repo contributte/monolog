@@ -1,0 +1,6 @@
+monolog:
+	defaultChannel: app
+	channel:
+		default:
+			handlers:
+				- Monolog\Handler\NullHandler
