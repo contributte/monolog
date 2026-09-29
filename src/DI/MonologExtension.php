@@ -36,7 +36,7 @@ class MonologExtension extends CompilerExtension
 					Expect::anyOf(Expect::string(), Expect::type(Statement::class))
 				),
 			]))->required()->min(1),
-			'defaultChannel' => Expect::string('default'),
+			'defaultChannel' => Expect::string('default')->min(1),
 			'hook' => Expect::structure([
 				'fromTracy' => Expect::bool(true),
 				'toTracy' => Expect::bool(true),

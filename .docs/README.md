@@ -38,7 +38,7 @@ extensions:
 
 ### Channels
 
-You can configure multiple logging channels. The `default` channel (see `defaultChannel` below) is required and is the only one that is autowired.
+You can configure multiple logging channels. One channel is the default one (`default` unless changed via `defaultChannel`); it is required and it is the only autowired channel.
 
 ```neon
 monolog:
@@ -202,7 +202,7 @@ class LegacyCode
 
 ```neon
 monolog:
-    defaultChannel: default
+    defaultChannel: default # optional, name of the autowired channel
     channel:
         default:
             handlers:

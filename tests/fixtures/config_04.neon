@@ -1,11 +1,16 @@
+services:
+	testHandler: Monolog\Handler\TestHandler
+
 monolog:
 	defaultChannel: app
 	channel:
 		app:
 			handlers:
-				- Monolog\Handler\NullHandler
+				- @testHandler
 		foo:
 			handlers:
 				- Monolog\Handler\NullHandler
 	holder:
 		enabled: true
+	hook:
+		toTracy: false
