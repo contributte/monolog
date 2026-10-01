@@ -36,6 +36,7 @@ class MonologExtension extends CompilerExtension
 					Expect::anyOf(Expect::string(), Expect::type(Statement::class))
 				),
 			]))->required()->min(1),
+			'defaultChannel' => Expect::string('default')->min(1),
 			'hook' => Expect::structure([
 				'fromTracy' => Expect::bool(true),
 				'toTracy' => Expect::bool(true),
@@ -54,8 +55,8 @@ class MonologExtension extends CompilerExtension
 		$config = $this->config;
 		$builder = $this->getContainerBuilder();
 
-		if (!isset($config->channel['default'])) {
-			throw new InvalidStateException(sprintf('%s.channel.default is required.', $this->name));
+		if (!isset($config->channel[$config->defaultChannel])) {
+			throw new InvalidStateException(sprintf('%s.channel.%s is required.', $this->name, $config->defaultChannel));
 		}
 
 		if ($config->manager->enabled) {
@@ -87,7 +88,7 @@ class MonologExtension extends CompilerExtension
 				]);
 
 			// Only default logger is autowired
-			if ($name !== 'default') {
+			if ($name !== $config->defaultChannel) {
 				$logger->setAutowired(false);
 			}
 		}
@@ -117,7 +118,7 @@ class MonologExtension extends CompilerExtension
 		}
 
 		if ($config->holder->enabled) {
-			$initialize->addBody(LoggerHolder::class . '::setLogger(?, $this);', [$this->prefix('logger.default')]);
+			$initialize->addBody(LoggerHolder::class . '::setLogger(?, $this);', [$this->prefix('logger.' . $config->defaultChannel)]);
 		}
 	}
 
