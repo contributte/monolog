@@ -1,22 +1,53 @@
 <?php declare(strict_types = 1);
 
+use Contributte\Monolog\DI\MonologExtension;
 use Contributte\Monolog\Exception\Logic\InvalidStateException;
 use Contributte\Monolog\LoggerHolder;
 use Contributte\Monolog\Tracy\LazyTracyLogger;
+use Contributte\Tester\Environment;
 use Contributte\Tester\Toolkit;
+use Contributte\Tester\Utils\Neonkit;
 use Monolog\Handler\TestHandler;
 use Monolog\Logger;
+use Nette\DI\Compiler;
+use Nette\DI\Container;
+use Nette\DI\ContainerLoader;
 use Nette\DI\InvalidConfigurationException;
 use Psr\Log\LoggerInterface;
 use Tester\Assert;
-use Tests\Toolkit\Helpers;
+use Tracy\Bridges\Nette\TracyExtension;
 use Tracy\ILogger;
 
 require __DIR__ . '/../../bootstrap.php';
 
 // Custom default channel is autowired and used by LoggerHolder
 Toolkit::test(static function (): void {
-	$container = Helpers::createContainer(__DIR__ . '/../../fixtures/config_04.neon');
+	$loader = new ContainerLoader(Environment::getTestDir(), true);
+	$class = $loader->load(static function (Compiler $compiler): void {
+		$compiler->addExtension('tracy', new TracyExtension());
+		$compiler->addExtension('monolog', new MonologExtension());
+		$compiler->addConfig(Neonkit::load(<<<'NEON'
+			services:
+				testHandler: Monolog\Handler\TestHandler
+
+			monolog:
+				defaultChannel: app
+				channel:
+					app:
+						handlers:
+							- @testHandler
+					foo:
+						handlers:
+							- Monolog\Handler\NullHandler
+				holder:
+					enabled: true
+				hook:
+					toTracy: false
+		NEON));
+	}, __FILE__ . __LINE__);
+
+	/** @var Container $container */
+	$container = new $class();
 
 	// Needed for LoggerHolder
 	$container->initialize();
@@ -53,13 +84,35 @@ Toolkit::test(static function (): void {
 // Configured default channel must exist
 Toolkit::test(static function (): void {
 	Assert::exception(static function (): void {
-		Helpers::createContainer(__DIR__ . '/../../fixtures/config_05.neon');
+		$loader = new ContainerLoader(Environment::getTestDir(), true);
+		$loader->load(static function (Compiler $compiler): void {
+			$compiler->addExtension('monolog', new MonologExtension());
+			$compiler->addConfig(Neonkit::load(<<<'NEON'
+				monolog:
+					defaultChannel: app
+					channel:
+						default:
+							handlers:
+								- Monolog\Handler\NullHandler
+			NEON));
+		}, __FILE__ . __LINE__);
 	}, InvalidStateException::class, 'monolog.channel.app is required.');
 });
 
 // Configured default channel must not be empty
 Toolkit::test(static function (): void {
 	Assert::exception(static function (): void {
-		Helpers::createContainer(__DIR__ . '/../../fixtures/config_06.neon');
+		$loader = new ContainerLoader(Environment::getTestDir(), true);
+		$loader->load(static function (Compiler $compiler): void {
+			$compiler->addExtension('monolog', new MonologExtension());
+			$compiler->addConfig(Neonkit::load(<<<'NEON'
+				monolog:
+					defaultChannel: ''
+					channel:
+						default:
+							handlers:
+								- Monolog\Handler\NullHandler
+			NEON));
+		}, __FILE__ . __LINE__);
 	}, InvalidConfigurationException::class, '~length of item .+monolog.+defaultChannel.+ expects to be in range 1~');
 });

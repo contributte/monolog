@@ -1,6 +1,0 @@
-monolog:
-	defaultChannel: ''
-	channel:
-		default:
-			handlers:
-				- Monolog\Handler\NullHandler
